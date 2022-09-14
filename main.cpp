@@ -1,5 +1,8 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
+#include <QScopedPointer>
+
+#include "graphcontroller.h"
 
 int main(int argc, char *argv[])
 {
@@ -10,6 +13,10 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+
+    QScopedPointer<GraphController> Controller(new GraphController);
+    Controller->setupContext(engine.rootContext());
+
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(
         &engine, &QQmlApplicationEngine::objectCreated, &app,

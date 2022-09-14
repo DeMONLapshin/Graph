@@ -161,6 +161,10 @@ Window {
                     width: 3
                 }
             }
+
+            onCanceled: {
+
+            }
         }
 
         Button {
