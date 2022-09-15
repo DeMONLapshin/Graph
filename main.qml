@@ -28,81 +28,49 @@ Window {
             left: parent.left
             right: parent.right
         }
-
         margins.right: 0.5 * mainWindow.margin
-//        margins {
-//            top: mainWindow.margin
-//            bottom: mainWindow.margin
-//            left: mainWindow.margin
-//            right: mainWindow.margin
-//        }
-//        backgroundColor: "lightgreen"
 
         height: 0.75 * parent.height
         antialiasing: true
-        legend.visible: false
-//        title: qsTr("scatter")
-
-//        axes: ValuesAxis {
-//            gridVisible: false
-//        }
-
-//        x: 170
-//        y: 90
-//        width: 300
-//        height: 300
+        legend.visible: true
 
         ScatterSeries {
-            name: "ScatterSeries"
             id: scatterSeries
+            name: "Scatter Series"
 
             color: mainWindow.blueColor
             axisX: ValueAxis {
                 min: 0.0
-                max: 10
+                max: graphController.range
                 tickCount: 2
                 labelsVisible: false
                 color: mainWindow.grayColor
             }
             axisY: ValueAxis {
                 min: 0.0
-                max: 10
+                max: graphController.range
                 tickCount: 2
                 labelsVisible: false
                 color: mainWindow.grayColor
             }
-
-            XYPoint {
-                x: 1
-                y: 1
-            }
-
-            XYPoint {
-                x: 2
-                y: 4
-            }
-
-            XYPoint {
-                x: 4
-                y: 2
-            }
-
-            XYPoint {
-                x: 5
-                y: 5
-            }
+//            XYPoint {
+//                x: 5
+//                y: 5
+//            }
         }
 
-        onSeriesAdded: {
-//            zoomOut();
-        }
-        // @disable-check M16
-        Component.onCompleted: {
-            console.log("Component.onCompleted!!!!!!!!!!!!!" + axisX());
-            scatterSeries.append(10, 10);
-            scatterSeries.append(3, 3);
-            for (var i = 0; i <= 10; i++) {
-                scatterSeries.append(i, Math.random());
+//        // @disable-check M16
+//        Component.onCompleted: {
+//            for (var i = 0; i <= 5; i++) {
+//                scatterSeries.append(i, Math.random());
+//            }
+//        }
+
+        Connections {
+            target: graphController
+
+            onProgressChanged: {
+                scatterSeries.append(point[0], point[1])
             }
         }
     }
@@ -162,8 +130,8 @@ Window {
                 }
             }
 
-            onCanceled: {
-
+            onClicked: {
+                graphController.startButtonClicked();
             }
         }
 
@@ -211,6 +179,10 @@ Window {
                     width: 3
                 }
             }
+
+            onClicked: {
+                graphController.pauseButtonClicked();
+            }
         }
 
         Button {
@@ -233,6 +205,11 @@ Window {
                     color: mainWindow.grayColor
                     width: 3
                 }
+            }
+
+            onClicked: {
+                graphController.stopButtonClicked();
+                scatter.removeAllSeries();
             }
         }
     }

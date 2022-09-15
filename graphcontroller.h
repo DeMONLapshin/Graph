@@ -13,13 +13,6 @@ public:
 
     void setupContext(QQmlContext *rootContext);
 
-    // signals:
-    //    void removeSelectedFilesPressed();
-    //    void moveSelectedFilesPressed();
-    //    void copySelectedFilesPressed();
-    //    void cancelSelectionPressed();
-    //    void setMovingModePressed();
-
 private:
     class Implementation;
     QScopedPointer<Implementation> d;

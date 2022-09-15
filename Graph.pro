@@ -9,7 +9,8 @@ CONFIG += c++11 c++14
 SOURCES += \
         graphcontroller.cpp \
         graphprivate.cpp \
-        main.cpp
+        main.cpp \
+        worker.cpp
 
 RESOURCES += qml.qrc
 
@@ -29,4 +30,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     graphcontroller.h \
-    graphprivate.h
+    graphprivate.h \
+    worker.h
