@@ -1,6 +1,7 @@
 #include "worker.h"
 
 #include <QDebug>
+#include <QPoint>
 #include <QRandomGenerator>
 #include <QThread>
 #include <QVariant>
@@ -17,15 +18,19 @@ void Worker::numberGeneration()
         int x = QRandomGenerator::global()->bounded(m_range);
         int y = QRandomGenerator::global()->bounded(m_range);
         QVariantList list;
-        list << x << y;
+        list << QPoint(x, y);
         emit progressChanged(QVariant::fromValue(list));
 
-        QMutexLocker locker(&m_mutex);
-        if (m_isPauseRequested) {
-            qDebug() << "Worker: childe Thread paused";
-            m_isPauseRequested = false;
-            break;
+        { // to remove locker in thit block
+            QMutexLocker locker(&m_mutex);
+            if (m_isPauseRequested) {
+                qDebug() << "Worker: childe Thread paused";
+                m_isPauseRequested = false;
+                m_mutex.unlock();
+                break;
+            }
         }
+
         if (thread()->isInterruptionRequested()) {
             qDebug() << "Worker: childe Thread interrupted";
             thread()->quit();

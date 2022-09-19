@@ -70,7 +70,9 @@ Window {
             target: graphController
 
             onProgressChanged: {
-                scatterSeries.append(point[0], point[1])
+                point.forEach(function(item, i, arr) {          // call function for each array item
+                        scatterSeries.append(item.x, item.y)
+                    });
             }
         }
     }
