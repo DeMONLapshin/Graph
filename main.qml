@@ -40,16 +40,16 @@ Window {
 
             color: mainWindow.blueColor
             axisX: ValueAxis {
-                min: 0.0
+                min: - 0.5
                 max: graphController.range
-                tickCount: 2
+                tickCount: 3
                 labelsVisible: false
                 color: mainWindow.grayColor
             }
             axisY: ValueAxis {
-                min: 0.0
+                min: - 0.5
                 max: graphController.range
-                tickCount: 2
+                tickCount: 3
                 labelsVisible: false
                 color: mainWindow.grayColor
             }
