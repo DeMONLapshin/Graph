@@ -8,7 +8,7 @@ CONFIG += c++11 c++14
 
 SOURCES += \
         graphcontroller.cpp \
-        graphprivate.cpp \
+        graphview.cpp \
         main.cpp \
         worker.cpp
 
@@ -30,5 +30,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     graphcontroller.h \
-    graphprivate.h \
+    graphview.h \
     worker.h

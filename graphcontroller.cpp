@@ -5,7 +5,7 @@
 #include <QThread>
 #include <QVariant>
 
-#include "graphprivate.h"
+#include "graphview.h"
 #include "worker.h"
 
 class GraphController::Implementation
@@ -16,25 +16,25 @@ public:
     void numberGeneration();
 
     GraphController *q = nullptr;
-    GraphPrivate *graphView = nullptr;
+    GraphView *graphView = nullptr;
     QThread workerThread;
     Worker *worker;
 };
 
 GraphController::Implementation::Implementation(GraphController *q)
     : q(q)
-    , graphView(new GraphPrivate(q))
+    , graphView(new GraphView(q))
     , worker(new Worker)
 {
     worker->moveToThread(&workerThread);
     worker->setRange(graphView->range());
 
-    connect(graphView, &GraphPrivate::startButtonClicked, worker, &Worker::numberGeneration);
-    connect(graphView, &GraphPrivate::pauseButtonClicked, q,
+    connect(graphView, &GraphView::startButtonClicked, worker, &Worker::numberGeneration);
+    connect(graphView, &GraphView::pauseButtonClicked, q,
             [worker = worker]() { worker->pauseRequested(); });
-    connect(graphView, &GraphPrivate::stopButtonClicked, q,
+    connect(graphView, &GraphView::stopButtonClicked, q,
             [worker = worker]() { worker->thread()->requestInterruption(); });
-    connect(worker, &Worker::progressChanged, graphView, &GraphPrivate::progressChanged);
+    connect(worker, &Worker::progressChanged, graphView, &GraphView::progressChanged);
 
     connect(&workerThread, &QThread::finished, worker, &QObject::deleteLater);
     workerThread.start();

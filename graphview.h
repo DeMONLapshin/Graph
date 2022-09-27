@@ -3,14 +3,14 @@
 #include <QObject>
 #include <QVariant>
 
-class GraphPrivate : public QObject
+class GraphView : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int range MEMBER m_range CONSTANT)
 
 public:
-    explicit GraphPrivate(QObject *parent);
-    ~GraphPrivate() override = default;
+    explicit GraphView(QObject *parent);
+    ~GraphView() override = default;
 
     int range() const noexcept;
 
