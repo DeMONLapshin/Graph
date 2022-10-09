@@ -11,13 +11,21 @@
 class GraphController::Implementation
 {
 public:
+    class WorkerThread : public QThread
+    {
+        void run() override
+        {
+            exec();
+        }
+    };
+
     explicit Implementation(GraphController *q);
 
     void numberGeneration();
 
     GraphController *q = nullptr;
     GraphView *graphView = nullptr;
-    QThread workerThread;
+    WorkerThread workerThread;
     Worker *worker;
 };
 
@@ -26,18 +34,6 @@ GraphController::Implementation::Implementation(GraphController *q)
     , graphView(new GraphView(q))
     , worker(new Worker)
 {
-    worker->moveToThread(&workerThread);
-    worker->setRange(graphView->range());
-
-    connect(graphView, &GraphView::startButtonClicked, worker, &Worker::numberGeneration);
-    connect(graphView, &GraphView::pauseButtonClicked, q,
-            [worker = worker]() { worker->pauseRequested(); });
-    connect(graphView, &GraphView::stopButtonClicked, q,
-            [worker = worker]() { worker->thread()->requestInterruption(); });
-    connect(worker, &Worker::progressChanged, graphView, &GraphView::progressChanged);
-
-    connect(&workerThread, &QThread::finished, worker, &QObject::deleteLater);
-    workerThread.start();
 }
 
 void GraphController::Implementation::numberGeneration()
@@ -50,6 +46,17 @@ GraphController::GraphController(QObject *parent)
     : QObject(parent)
     , d(new Implementation(this))
 {
+    d->worker->moveToThread(&d->workerThread);
+    d->worker->setRange(d->graphView->range());
+
+    connect(d->graphView, &GraphView::startButtonClicked, d->worker, &Worker::numberGeneration);
+    connect(d->graphView, &GraphView::pauseButtonClicked, d->worker, &Worker::pauseRequest);
+    connect(d->graphView, &GraphView::stopButtonClicked, d->worker,
+            [worker = d->worker]() { worker->thread()->requestInterruption(); });
+    connect(d->worker, &Worker::progressChanged, d->graphView, &GraphView::progressChanged);
+
+    connect(&d->workerThread, &QThread::finished, d->worker, &QObject::deleteLater);
+    d->workerThread.start();
 }
 
 GraphController::~GraphController()

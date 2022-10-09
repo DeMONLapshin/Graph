@@ -14,7 +14,7 @@ public:
 
     void numberGeneration();
     void setRange(const int range);
-    void pauseRequested();
+    void pauseRequest();
 
 signals:
     void progressChanged(const QVariant point);
